@@ -1,50 +1,155 @@
+#include "opencv2/ml.hpp"
 #include "opencv2/core.hpp"
-#include "opencv2/imgproc.hpp"
-#include "opencv2/highgui.hpp"
-#include "opencv2/videoio.hpp"
-#include <iostream>
+#include "opencv2/core/utility.hpp"
+#include <stdio.h>
+#include <string>
+#include <map>
 
 using namespace cv;
-using namespace std;
+using namespace cv::ml;
 
-void drawText(Mat & image);
-
-int main()
+static void help(char** argv)
 {
-    cout << "Built with OpenCV " << CV_VERSION << endl;
-    Mat image;
-    VideoCapture capture;
-    capture.open(0);
-    if(capture.isOpened())
+    printf(
+            "\nThis sample demonstrates how to use different decision trees and forests including boosting and random trees.\n"
+            "Usage:\n\t%s [-r=<response_column>] [-ts=type_spec] <csv filename>\n"
+            "where -r=<response_column> specified the 0-based index of the response (0 by default)\n"
+            "-ts= specifies the var type spec in the form ord[n1,n2-n3,n4-n5,...]cat[m1-m2,m3,m4-m5,...]\n"
+            "<csv filename> is the name of training data file in comma-separated value format\n\n", argv[0]);
+}
+
+static void train_and_print_errs(Ptr<StatModel> model, const Ptr<TrainData>& data)
+{
+    bool ok = model->train(data);
+    if( !ok )
     {
-        cout << "Capture is opened" << endl;
-        for(;;)
-        {
-            capture >> image;
-            if(image.empty())
-                break;
-            drawText(image);
-            imshow("Sample", image);
-            if(waitKey(10) >= 0)
-                break;
-        }
+        printf("Training failed\n");
     }
     else
     {
-        cout << "No capture" << endl;
-        image = Mat::zeros(480, 640, CV_8UC1);
-        drawText(image);
-        imshow("Sample", image);
-        waitKey(0);
+
+        printf( "train error: %f\n", model->calcError(data, false, noArray()) );
+        printf( "test error: %f\n\n", model->calcError(data, true, noArray()) );
     }
-    return 0;
 }
 
-void drawText(Mat & image)
+int main(int argc, char** argv)
 {
-    putText(image, "Hello OpenCV",
-            Point(20, 50),
-            FONT_HERSHEY_COMPLEX, 1, // font face and scale
-            Scalar(255, 255, 255), // white
-            1, LINE_AA); // line thickness and type
+    cv::CommandLineParser parser(argc, argv, "{ help h | | }{r | 0 | }{ts | | }{@input | | }");
+    if (parser.has("help"))
+    {
+        help(argv);
+        return 0;
+    }
+    std::string filename = parser.get<std::string>("@input");
+    int response_idx;
+    std::string typespec;
+    response_idx = parser.get<int>("r");
+    typespec = parser.get<std::string>("ts");
+    if( filename.empty() || !parser.check() )
+    {
+        parser.printErrors();
+        help(argv);
+        return 0;
+    }
+    printf("\nReading in %s...\n\n",filename.c_str());
+    const double train_test_split_ratio = 0.9;
+
+
+    printf("response_idx: %d\n", response_idx);
+    Ptr<TrainData> data = TrainData::loadFromCSV(filename, 0, -1, -1, typespec);
+    if( data.empty() )
+    {
+        printf("ERROR: File %s can not be read\n", filename.c_str());
+        return 0;
+    }
+
+    data->setTrainTestSplitRatio(train_test_split_ratio);
+    std::cout << "Test/Train: " << data->getNTestSamples() << "/" << data->getNTrainSamples() << "\n";
+
+    printf("======DTREE=====\n");
+    Ptr<DTrees> dtree = DTrees::create();
+    dtree->setMaxDepth(10);
+    dtree->setMinSampleCount(2);
+    dtree->setRegressionAccuracy(0);
+    dtree->setUseSurrogates(false);
+    dtree->setMaxCategories(16);
+    dtree->setCVFolds(0);
+    dtree->setUse1SERule(false);
+    dtree->setTruncatePrunedTree(false);
+    dtree->setPriors(Mat());
+    train_and_print_errs(dtree, data);
+
+    if( (int)data->getClassLabels().total() <= 2 ) // regression or 2-class classification problem
+    {
+        printf("======BOOST=====\n");
+        Ptr<Boost> boost = Boost::create();
+        boost->setBoostType(Boost::GENTLE);
+        boost->setWeakCount(100);
+        boost->setWeightTrimRate(0.95);
+        boost->setMaxDepth(2);
+        boost->setUseSurrogates(false);
+        boost->setPriors(Mat());
+        train_and_print_errs(boost, data);
+    }
+
+    printf("======RTREES=====\n");
+    Ptr<RTrees> rtrees = RTrees::create();
+    rtrees->setMaxDepth(10);
+    rtrees->setMinSampleCount(2);
+    rtrees->setRegressionAccuracy(0);
+    rtrees->setUseSurrogates(false);
+    rtrees->setMaxCategories(16);
+    rtrees->setPriors(Mat());
+    rtrees->setCalculateVarImportance(true);
+    rtrees->setActiveVarCount(0);
+    rtrees->setTermCriteria(TermCriteria(TermCriteria::MAX_ITER, 100, 0));
+    bool ok = rtrees->train(data);
+    if( !ok )
+    {
+        printf("Training failed\n");
+    }
+    else
+    {
+        printf( "train error: %f\n", rtrees->calcError(data, false, noArray()) );
+        printf( "test error: %f\n\n", rtrees->calcError(data, true, noArray()) );
+    }
+    cv::FileStorage fsw("", FileStorage::Mode::WRITE + FileStorage::Mode::MEMORY + cv::FileStorage::FORMAT_YAML);
+    rtrees->write(fsw);
+    auto str = fsw.releaseAndGetString();
+
+//    std::cout << str << std::endl;
+//    auto ref_data = data->getTrainSamples();
+//    std::cout << "ref_labels:" << ref_data << std::endl;
+//    cv::Mat predict_labels;
+//    cv::Mat src = (Mat_<float>(1,4) << 6.5,2.8,4.6,1.5);
+//    rtrees->predict(src, predict_labels);
+//    std::cout << "Data:" << data->getTestSamples() << std::endl;
+//    std::cout << "Result:" << predict_labels << std::endl;
+
+//    cv::Mat variable_importance = rtrees->getVarImportance();
+//    std::cout << "Estimated variable importance" << std::endl;
+//    for (int i = 0; i < variable_importance.rows; i++) {
+//        std::cout << "Variable " << i << ": " << variable_importance.at<float>(i, 0) << std::endl;
+//    }
+
+
+//    cv::ml::StatModel::Flags::RAW_OUTPUT
+
+//
+    {
+        Ptr<RTrees> rtreesPredict = RTrees::create();
+
+        cv::FileStorage read(str, cv::FileStorage::READ + cv::FileStorage::MEMORY + cv::FileStorage::FORMAT_YAML);
+        rtreesPredict->read(read.root());
+        std::cout << "MaxCategories:" << rtreesPredict->getMaxCategories() << std::endl;
+
+        cv::Mat src = (Mat_<float>(1, 4) << 6.5, 2.8, 4.6, 1.5);
+        cv::Mat predict_labels;
+        rtreesPredict->predict(src, predict_labels);
+        std::cout << "Result:" << predict_labels << std::endl;
+    }
+
+
+    return 0;
 }
