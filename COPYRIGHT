@@ -2,10 +2,71 @@ Copyright (C) 2000-2020, Intel Corporation, all rights reserved.
 Copyright (C) 2009-2011, Willow Garage Inc., all rights reserved.
 Copyright (C) 2009-2016, NVIDIA Corporation, all rights reserved.
 Copyright (C) 2010-2013, Advanced Micro Devices, Inc., all rights reserved.
-Copyright (C) 2015-2020, OpenCV Foundation, all rights reserved.
+Copyright (C) 2013-2020, OpenCV Foundation, all rights reserved.
 Copyright (C) 2008-2016, Itseez Inc., all rights reserved.
 Copyright (C) 2019-2020, Xperience AI, all rights reserved.
 Copyright (C) 2019-2020, Shenzhen Institute of Artificial Intelligence and
                          Robotics for Society, all rights reserved.
+Copyright (C) 2005-2018, Google Inc.
+Copyright (C) 2008-2009, Marius Muja (mariusm@cs.ubc.ca). All rights reserved.
+Copyright (C) 2008-2009, David G. Lowe (lowe@cs.ubc.ca). All rights reserved.
+Copyright (C) 2005-2011, Christopher Diggins 
+Copyright (C) 2010-2012, Multicoreware, Inc., all rights reserved.
+Copyright (C) 2010-2012, Institute Of Software Chinese Academy Of Science, all rights reserved.
+Copyright (C) 2008-2011, William Lucas
+Copyright (C) 2008-2013, The Khronos Group Inc.
+Copyright (C) 2011-2017, The Regents of the University of California.
+Copyright (C) 1997-2002, Makoto Matsumoto and Takuji Nishimura,
+Copyright (C) 2015-2017, Philippe Tillet
+Copyright (C) 1978-1999, Ken Turkowski. <turk@computer.org>
+Copyright (C) 1999-2001, MIYASAKA Masaru
+Copyright (C) 2000-2003, Chih-Chung Chang and Chih-Jen Lin
+Copyright (C) 2016-2017, Fabian David Tschopp, all rights reserved.
+Copyright (C) 2012-2014, Deepmind Technologies (Koray Kavukcuoglu)
+Copyright (C) 2011-2013, NYU (Clement Farabet)
+Copyright (C) 2006-2012, NEC Laboratories America (Ronan Collobert, Leon Bottou, Iain Melvin, Jason Weston, Koray Kavukcuoglu)
+Copyright (C) 2011-2014, Idiap Research Institute (Ronan Collobert)
+Copyright (C) 2006-2010, Rob Hess <hess@eecs.oregonstate.edu>
+Copyright (C) 2001-2004, Idiap Research Institute (Ronan Collobert, Samy Bengio, Johnny Mariethoz)
+Copyright (C) 2010-2011, Ethan Rublee
+Copyright (C) 2011-2014, Andrey Kamaev
+Copyright (C) 2014-2016, Joseph Howse (Nummist Media Corporation Limited, Halifax, Nova Scotia, Canada). All rights reserved.
+Copyright (C) 2006,2008, Edward Rosten
+Copyright (C) 1993,      by Sun Microsystems, Inc. All rights reserved.
+Copyright (C) 1997,      by Joseph O'Rourke.  It may be freely
+Copyright (C) 1998,      Yossi Rubner
+Copyright (C) 2001,      Kevlin Henney 
+Copyright (C) 2004,      Hannes Kruppa and Bernt Schiele (ETH Zurich, Switzerland).
+Copyright (C) 2005,      Pablo Aguilar 
+Copyright (C) 2006,      Idiap Research Institute (Samy Bengio)
+Copyright (C) 2006,      Simon Perreault
+Copyright (C) 2007,      Miroslav Balda
+Copyright (C) 2008,      Nils Hasler, all rights reserved.
+Copyright (C) 2009,      Liu Liu All rights reserved.
+Copyright (C) 2009,      Jostein Austvik Jacobsen.
+Copyright (C) 2010,      Argus Corp. All rights reserved.
+Copyright (C) 2010,      Elmar Mair
+Copyright (C) 2011,      Philipp Wagner <bytefish[at]gmx[dot]de>.
+Copyright (C) 2011,      Modesto Castrillon-Santana (IUSIANI, Universidad de Las Palmas de Gran Canaria, Spain).
+Copyright (C) 2011,      The Autonomous Systems Lab (ASL), ETH Zurich,
+Copyright (C) 2012.      Eduard Feicho All rights reserved.
+Copyright (C) 2013.      Alexander Shishkov  All rights reserved.
+Copyright (C) 2013,      AKAZE Features (Pablo F. Alcantarilla, Jesus Nuevo)
+Copyright (C) 2013,      Bo Li (prclibo@gmail.com), ETH Zurich
+Copyright (C) 2013,      Evgeny Toropov, all rights reserved.
+Copyright (C) 2013,      Ovidiu Parvu, all rights reserved.
+Copyright (C) 2013,      Giacomo (Mimmo) Cosenza aka Magomimmo
+Copyright (C) 2014,      Samson Yilma (samson_yilma@yahoo.com), all rights reserved.
+Copyright (C) 2014,      Olexa Bilaniuk, Hamid Bazargani & Robert Laganiere, all rights reserved.
+Copyright (C) 2015,      Piotr Dobrowolski dobrypd[at]gmail[dot]com
+Copyright (C) 2017,      Puttemans Steven, Can Ergun and Toon Goedeme
+Copyright (C) 2017,      Joseph Redmon
+Copyright (C) 2017,      Toby Collins
+Copyright (C) 2018,      Ya-Chiu Wu, all rights reserved.
+Copyright (C) 2019,      Czech Technical University.
+Copyright (C) 2020,      Stefan Brüns <stefan.bruens@rwth-aachen.de>
+Copyright (C) 2020,      OPEN AI LAB
+Copyright (C)            Microsoft. All rights reserved.
+Copyright (C)            Facebook Inc.
 
 Third party copyrights are property of their respective owners.
